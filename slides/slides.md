@@ -75,6 +75,7 @@ paginate: true
 
 **Built on:**
 - **Angular 18** (HTML + TypeScript)
+- **Material Components** as design components
 - **RxJS** for reactive programming, async data streams
 - **Cloud App SDK** library (`@exlibris/exl-cloudapp-angular-lib`)
 
