@@ -5,7 +5,29 @@ paginate: true
 ---
 
 <!-- _class: lead -->
-# 1. What are Alma Cloud Apps?
+# Alma Cloud Apps Workshop
+## SLSP Developer Forum 2025
+
+---
+
+# Agenda
+
+1. **Introduction to Cloud Apps**
+2. **Use Cases, Capabilities & Examples**
+3. **Technical Foundation**
+4. **Development Essentials**
+   - 4a. Angular & RxJS
+   - 4b. Working with the SDK
+   - 4c. Configuration (i18n & manifest.json)
+5. **Publishing & Lifecycle**
+6. **Reference & Resources**
+7. **Hands-on Time**
+
+---
+
+
+<!-- _class: lead -->
+# 1. Introduction to Cloud Apps
 
 ---
 
@@ -66,8 +88,52 @@ paginate: true
 ---
 
 
+
 <!-- _class: lead -->
-# 2. Technical Foundation & SDK APIs
+# 2. Use Cases, Capabilities & Examples
+
+---
+
+# Why Build Cloud Apps?
+
+**Key Benefits:**
+- ✅ **No separate frontend hosting** - Runs directly in Alma
+- ✅ **Built-in authentication** - Users already logged in
+- ✅ **Context-aware** - Knows current record/page user is viewing
+
+**What Cloud Apps CAN do:**
+- Access and manipulate data via Alma REST API
+- Custom workflows and automations
+- Integration with external systems and APIs
+- NZ API access via Cloud App Proxy
+
+---
+
+# Real SLSP Examples
+
+**See what's possible in our community:**
+- **Workflow automation** → SLSP CatExpand
+- **External system integration** → SLSP to 7DM, SLSKey (with backend services)
+- **Network Zone API access** → SLSP Card
+- **Custom tools & reports** → Bib Hierarchy, Print Slip Report, Copy User Roles
+
+<!-- _footer: '🔗 See all SLSP Cloud Apps: [resources/links.md](https://github.com/Swiss-Library-Service-Platform/slsp-cloudapps-resources/blob/main/resources/links.md)' -->
+
+---
+
+# Limitations to Keep in Mind
+
+**What Cloud Apps CANNOT do:**
+- ❌ Modify Alma's main UI (navigation, forms, MDE, etc.)
+- ❌ Limited to data accessible via Alma REST API
+- ❌ Perform batch operations (max 10 concurrent calls)
+- ❌ Run background jobs or scheduled tasks
+
+
+---
+
+<!-- _class: lead -->
+# 3. Technical Foundation
 
 ---
 
@@ -100,6 +166,83 @@ Apps interact with Alma through dedicated SDK services
 **We'll use it in the hands-on session!**
 
 <!-- _footer: '📖 SDK on GitHub: [github.com/ExLibrisGroup/exl-cloudapp-cli](https://github.com/ExLibrisGroup/cloudapp-sdk)' -->
+
+---
+
+<!-- _class: lead -->
+# 4. Development Essentials
+
+---
+
+<!-- _class: lead -->
+## 4a. Angular & RxJS
+
+---
+
+# Angular Fundamentals
+
+**Core Concepts:**
+- **Components** - UI building blocks
+- **Templates** - HTML with Angular syntax
+- **Services** - Business logic & data
+- **Dependency Injection** - Service management
+
+**You'll use:**
+- TypeScript (typed JavaScript)
+- RxJS (reactive programming)
+- Angular CLI (development tools)
+
+---
+
+# RxJS & Asynchronous Patterns
+
+- Frontend is inherently asynchronous (API calls, user interactions)
+- RxJS makes this manageable with consistent patterns
+
+**Key Concepts:**
+- **Observables** - Asynchronous data streams
+- **Operators** - Transform data (map, filter, tap, catchError)
+- **Subscribe** - Execute and get results
+
+**You'll see RxJS everywhere:**
+- All Cloud App SDK services return Observables
+- 📖 Learn more: [learnrxjs.io/learn-rxjs/concepts/rxjs-primer](https://www.learnrxjs.io/learn-rxjs/concepts/rxjs-primer)
+
+---
+
+# RxJS: Best Practice Pattern
+
+<div style="font-size: 0.75em;">
+
+**Recommended approach with proper cleanup:**
+
+```typescript
+private destroyRef = inject(DestroyRef);
+
+this.eventsService.entities$.pipe(
+  takeUntilDestroyed(this.destroyRef),
+  tap(entities => this.entities = entities),
+  catchError(error => {
+    this.alert.error(error.message);
+    return EMPTY;
+  })
+).subscribe();
+```
+
+**Best practices shown:**
+- `takeUntilDestroyed()` - Auto-unsubscribe when component destroyed
+- `tap()` - Side effects (assignment) without changing the stream
+- Keep subscribe empty - logic stays in operators
+- `catchError()` - Handle errors gracefully
+
+</div>
+
+---
+
+
+
+<!-- _class: lead -->
+## 4b. Working with the SDK
 
 ---
 
@@ -288,114 +431,7 @@ restService.call('/users/{user_id}').subscribe(
 ---
 
 <!-- _class: lead -->
-# 4. Use Cases, Capabilities & Examples
-
----
-
-# Why Build Cloud Apps?
-
-**Key Benefits:**
-- ✅ **No separate frontend hosting** - Runs directly in Alma
-- ✅ **Built-in authentication** - Users already logged in
-- ✅ **Context-aware** - Knows current record/page user is viewing
-
-**What Cloud Apps CAN do:**
-- Access and manipulate data via Alma REST API
-- Custom workflows and automations
-- Integration with external systems and APIs
-- NZ API access via Cloud App Proxy
-
----
-
-# Real SLSP Examples
-
-**See what's possible in our community:**
-- **Workflow automation** → SLSP CatExpand
-- **External system integration** → SLSP to 7DM, SLSKey (with backend services)
-- **Network Zone API access** → SLSP Card
-- **Custom tools & reports** → Bib Hierarchy, Print Slip Report, Copy User Roles
-
-<!-- _footer: '🔗 See all SLSP Cloud Apps: [resources/links.md](https://github.com/Swiss-Library-Service-Platform/slsp-cloudapps-resources/blob/main/resources/links.md)' -->
-
----
-
-# Limitations to Keep in Mind
-
-**What Cloud Apps CANNOT do:**
-- ❌ Modify Alma's main UI (navigation, forms, MDE, etc.)
-- ❌ Limited to data accessible via Alma REST API
-- ❌ Perform batch operations (max 10 concurrent calls)
-- ❌ Run background jobs or scheduled tasks
-
----
-
-<!-- _class: lead -->
-# 5. Angular Basics
-
----
-
-# Angular Fundamentals
-
-**Core Concepts:**
-- **Components** - UI building blocks
-- **Templates** - HTML with Angular syntax
-- **Services** - Business logic & data
-- **Dependency Injection** - Service management
-
-**You'll use:**
-- TypeScript (typed JavaScript)
-- RxJS (reactive programming)
-- Angular CLI (development tools)
-
----
-
-# RxJS & Asynchronous Patterns
-
-- Frontend is inherently asynchronous (API calls, user interactions)
-- RxJS makes this manageable with consistent patterns
-
-**Key Concepts:**
-- **Observables** - Asynchronous data streams
-- **Operators** - Transform data (map, filter, tap, catchError)
-- **Subscribe** - Execute and get results
-
-**You'll see RxJS everywhere:**
-- All Cloud App SDK services return Observables
-- 📖 Learn more: [learnrxjs.io/learn-rxjs/concepts/rxjs-primer](https://www.learnrxjs.io/learn-rxjs/concepts/rxjs-primer)
-
----
-
-# RxJS: Best Practice Pattern
-
-<div style="font-size: 0.75em;">
-
-**Recommended approach with proper cleanup:**
-
-```typescript
-private destroyRef = inject(DestroyRef);
-
-this.eventsService.entities$.pipe(
-  takeUntilDestroyed(this.destroyRef),
-  tap(entities => this.entities = entities),
-  catchError(error => {
-    this.alert.error(error.message);
-    return EMPTY;
-  })
-).subscribe();
-```
-
-**Best practices shown:**
-- `takeUntilDestroyed()` - Auto-unsubscribe when component destroyed
-- `tap()` - Side effects (assignment) without changing the stream
-- Keep subscribe empty - logic stays in operators
-- `catchError()` - Handle errors gracefully
-
-</div>
-
----
-
-<!-- _class: lead -->
-# 6. Internationalization (i18n)
+## 4c. Configuration
 
 ---
 
@@ -428,8 +464,29 @@ this.translate.instant('main.actionMessage')
 
 ---
 
+# The manifest.json
+
+**What is it?**
+- Configuration file at the root of your Cloud App project
+- Defines app metadata, behavior, and security settings
+
+**Key things you'll configure:**
+- **Basic metadata** - Title, subtitle, description, author
+- **Multi-language labels** - Translated app titles/descriptions
+- **Entity types** - Which Alma pages your app appears on (ITEM, USER, BIB_MDS, etc.)
+- **Security (CSP)** - External API connections, sandbox permissions
+- **Widget settings** - Dashboard widget configuration
+- **Institution restrictions** - Control which institutions can install (`relevantForInst`)
+
+**Note:** Changes require restart: `eca start`
+
+<!-- _footer: '📖 Manifest Docs: [developers.exlibrisgroup.com/cloudapps/docs/manifest](https://developers.exlibrisgroup.com/cloudapps/docs/manifest/)' -->
+
+---
+
+
 <!-- _class: lead -->
-# 7. Publishing & Lifecycle
+# 5. Publishing & Lifecycle
 
 ---
 
@@ -522,16 +579,15 @@ this.translate.instant('main.actionMessage')
 ---
 
 <!-- _class: lead -->
-# 8. Reference & Resources
+# 6. Reference & Resources
 
 ---
 
-# Resources
+# Helpful Resources
 
 **Official Documentation:**
 - Cloud Apps Docs: [developers.exlibrisgroup.com/cloudapps](https://developers.exlibrisgroup.com/cloudapps/docs/)
 - Alma API Docs: [developers.exlibrisgroup.com/alma](https://developers.exlibrisgroup.com/alma)
-- SDK Getting Started: [Cloud Apps SDK](https://developers.exlibrisgroup.com/cloudapps/started/)
 - App Center Examples: [developers.exlibrisgroup.com/appcenter](https://developers.exlibrisgroup.com/appcenter/)
 
 **Our Workshop Repository:**
