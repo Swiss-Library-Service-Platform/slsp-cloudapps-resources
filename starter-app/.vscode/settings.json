@@ -11,5 +11,6 @@
       "fileMatch": ["/manifest.json"],
       "url": "/node_modules/@exlibris/exl-cloudapp-base/manifest.schema.json"
     }
-  ]
+  ],
+  "cSpell.words": ["cloudapp", "exlibris"]
 }

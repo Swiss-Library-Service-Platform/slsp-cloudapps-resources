@@ -194,7 +194,6 @@
         "@angular-eslint/template/banana-in-box": "error",
         "@angular-eslint/template/eqeqeq": "error",
         "@angular-eslint/template/no-negated-async": "error",
-        "@angular-eslint/template/no-call-expression": "warn",
         "@angular-eslint/template/use-track-by-function": "warn"
       }
     }

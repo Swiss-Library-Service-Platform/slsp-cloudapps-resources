@@ -1,6 +1,4 @@
 {
   "markdown.marp.enableHtml": true,
-  "markdown.marp.themes": [
-    "./slides/.marp/theme.css"
-  ],
+  "markdown.marp.themes": ["./slides/.marp/theme.css"],
 }

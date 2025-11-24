@@ -14,12 +14,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
 	selector: 'app-main',
 	templateUrl: './main.component.html',
-	styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
 	public entities: Entity[] = [];
 	public selectedEntity: Entity | null = null;
-	public selectedEntityDetails$: Observable<Entity> | null = null;
+	public selectedEntityDetails$: Observable<Entity> = EMPTY;
 	public loader = inject(LoadingIndicatorService);
 
 	private restService = inject(CloudAppRestService);
