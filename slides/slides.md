@@ -287,15 +287,39 @@ restService.call('/users/{user_id}').subscribe(
 
 ---
 
-# Capabilities & Boundaries
-
-**What Cloud Apps CAN do:**
-- ✅ Access and manipulate data via Alma REST API
-- ✅ React to the current context (e.g., active record or page)
-- ✅ Custom workflows and automations
-- ✅ Integration with external systems and APIs
+<!-- _class: lead -->
+# 4. Use Cases, Capabilities & Examples
 
 ---
+
+# Why Build Cloud Apps?
+
+**Key Benefits:**
+- ✅ **No separate frontend hosting** - Runs directly in Alma
+- ✅ **Built-in authentication** - Users already logged in
+- ✅ **Context-aware** - Knows current record/page user is viewing
+
+**What Cloud Apps CAN do:**
+- Access and manipulate data via Alma REST API
+- Custom workflows and automations
+- Integration with external systems and APIs
+- NZ API access via Cloud App Proxy
+
+---
+
+# Real SLSP Examples
+
+**See what's possible in our community:**
+- **Workflow automation** → SLSP CatExpand
+- **External system integration** → SLSP to 7DM, SLSKey (with backend services)
+- **Network Zone API access** → SLSP Card
+- **Custom tools & reports** → Bib Hierarchy, Print Slip Report, Copy User Roles
+
+<!-- _footer: '🔗 See all SLSP Cloud Apps: [resources/links.md](https://github.com/Swiss-Library-Service-Platform/slsp-cloudapps-resources/blob/main/resources/links.md)' -->
+
+---
+
+# Limitations to Keep in Mind
 
 **What Cloud Apps CANNOT do:**
 - ❌ Modify Alma's main UI (navigation, forms, MDE, etc.)
@@ -303,11 +327,10 @@ restService.call('/users/{user_id}').subscribe(
 - ❌ Perform batch operations (max 10 concurrent calls)
 - ❌ Run background jobs or scheduled tasks
 
-
 ---
 
 <!-- _class: lead -->
-# 4. Angular Basics
+# 5. Angular Basics
 
 ---
 
@@ -372,7 +395,7 @@ this.eventsService.entities$.pipe(
 ---
 
 <!-- _class: lead -->
-# 5. Internationalization (i18n)
+# 6. Internationalization (i18n)
 
 ---
 
@@ -406,7 +429,7 @@ this.translate.instant('main.actionMessage')
 ---
 
 <!-- _class: lead -->
-# 6. Publishing & Lifecycle
+# 7. Publishing & Lifecycle
 
 ---
 
@@ -499,7 +522,7 @@ this.translate.instant('main.actionMessage')
 ---
 
 <!-- _class: lead -->
-# 7. Reference & Resources
+# 8. Reference & Resources
 
 ---
 
