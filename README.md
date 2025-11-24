@@ -2,19 +2,12 @@
 
 A collaborative repository for SLSP Cloud App development resources, documentation, and examples.
 
-## Quick Start
+## What's Inside
 
-1. **Workshop Slides**: [slides/slides.pdf](slides/slides.pdf)
-2. **Workshop Hands-On**: [workshop/step1-hands-on.md](workshop/step1-hands-on.md)
-3. **Example App**: [sample-cloud-app/](sample-cloud-app/)
-4. **Documentation Links**: [resources/links.md](resources/links.md)
-
-## Repository Structure
-
-- **`slides/`** - Workshop presentation materials
-- **`workshop/`** - Step-by-step hands-on guides
-- **`sample-cloud-app/`** - Example Cloud App for reference
-- **`resources/`** - Documentation links and references
+- **[slides/](slides/)** - Presentation materials about Alma Cloud Apps
+- **[workshop/](workshop/)** - Step-by-step development guides
+- **[starter-app/](starter-app/)** - Working example app to learn from and build upon
+- **[resources/](resources/)** - Documentation links and references
 
 ## Contributing
 
