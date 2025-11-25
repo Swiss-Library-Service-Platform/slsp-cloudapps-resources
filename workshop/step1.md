@@ -1,4 +1,5 @@
-# Workshop: Hands-On Exercise
+# Workshop: Hands-On Part
+# Step 1: Set Up Your Cloud App Development Environment
 
 This guide walks you through building your first Cloud App during the workshop.
 
