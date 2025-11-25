@@ -19,7 +19,7 @@ If you'd like to get more familiar with the framework first, try the following:
 
 The starter app currently lists all entities visible in Alma's main UI. Try filtering for a specific entity type, such as bibliographic items only.
 
-Check the SDK's [EntityType](../starter-app/node_modules/@exlibris/exl-cloudapp-angular-lib/lib/public-interfaces.d.ts) interface to see what's available.
+Check the SDK's [EntityType](https://github.com/ExLibrisGroup/cloudapp-sdk/blob/master/angular-lib/src/lib/public-interfaces.ts) interface to see what's available.
 
 ### 2. Display Entity Details
 
