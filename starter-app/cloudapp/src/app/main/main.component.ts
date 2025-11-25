@@ -64,6 +64,18 @@ export class MainComponent implements OnInit {
 		this.loader.show();
 
 		this.selectedEntityDetails$ = this.restService.call(entity.link).pipe(
+			catchError((error) => {
+				const errorMsg = (error as Error).message;
+
+				this.alert.error(
+					this.translate.instant('error.restApiError', [errorMsg]),
+					{
+						autoClose: false,
+					},
+				);
+
+				return EMPTY;
+			}),
 			finalize(() => {
 				this.loader.hide();
 			}),

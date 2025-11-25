@@ -11,5 +11,8 @@
 			"type": "Type",
 			"link": "Link"
 		}
+	},
+	"error": {
+		"restApiError": "Fehler bei der REST-API: {{0}}"
 	}
 }

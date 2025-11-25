@@ -11,5 +11,8 @@
 			"type": "Type",
 			"link": "Link"
 		}
+	},
+	"error": {
+		"restApiError": "REST API error: {{0}}"
 	}
 }
