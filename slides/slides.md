@@ -111,11 +111,12 @@ paginate: true
 
 # Real SLSP Examples
 
-**See what's possible in our community:**
+**A few examples in our community:**
 - **Workflow automation** → SLSP CatExpand
-- **External system integration** → SLSP to 7DM, SLSKey (with backend services)
-- **Network Zone API access** → SLSP Card
 - **Custom tools & reports** → Bib Hierarchy, Print Slip Report, Copy User Roles
+- **External system integration** → SLSP to 7DM, SLSKey, SLSPmails (all their own backends)
+- **Network Zone API access** → SLSP Card
+- **Info from other IZs** → SLSP Rapido Cloud App
 
 <!-- _footer: '🔗 See all SLSP Cloud Apps: [resources/links.md](https://github.com/Swiss-Library-Service-Platform/slsp-cloudapps-resources/blob/main/resources/links.md)' -->
 
@@ -156,12 +157,12 @@ Apps interact with Alma through dedicated SDK services
 **What is it?**
 - Official development toolkit for building Alma Cloud Apps
 - CLI tool + Angular library (`@exlibris/exl-cloudapp-angular-lib`)
-- Provides scaffolding, local dev server, and build tools
+- Provides starter app, local dev server, and build tools
 
 **Maintained by:**
 - Ex Libris Group (official support)
 - Open source on GitHub
-- Regular updates "twice a year"
+- Officially described as receiving updates twice a year
 
 **We'll use it in the hands-on session!**
 
@@ -181,17 +182,18 @@ Apps interact with Alma through dedicated SDK services
 
 # Angular Fundamentals
 
-**Core Concepts:**
-- **Components** - UI building blocks
-- **Templates** - HTML with Angular syntax
-- **Services** - Business logic & data
-- **Dependency Injection** - Service management
+**Application structures:**
+- **Components** - The fundamental building blocks (UI + logic)
+  - **Template** - HTML
+  - **Styles** - CSS/SCSS for appearance
+  - **Class / Controller** - TypeScript logic
+- **Services** - Reusable logic, shared state
+  - Services are injected into components via Angular **Dependency Injection**
+  - Dependency Injection: Angular's way of providing services to components automatically
 
-**You'll use:**
-- TypeScript (typed JavaScript)
-- RxJS (reactive programming)
-- Angular CLI (development tools)
-
+Change Detection & Reactivity
+- Angular automatically updates the UI when data changes
+- Use **Observables** for async data streams (e.g., API calls) -> RxJS
 ---
 
 # RxJS & Asynchronous Patterns
@@ -201,7 +203,7 @@ Apps interact with Alma through dedicated SDK services
 
 **Key Concepts:**
 - **Observables** - Asynchronous data streams
-- **Operators** - Transform data (map, filter, tap, catchError)
+- **Operators** - Transform data (map, filter, tap, catchError, takeUntilDestroyed)
 - **Subscribe** - Execute and get results
 
 **You'll see RxJS everywhere:**
@@ -210,30 +212,32 @@ Apps interact with Alma through dedicated SDK services
 
 ---
 
-# RxJS: Best Practice Pattern
+# RxJS: The Pattern You'll Use
 
-<div style="font-size: 0.75em;">
+**Think of Observables like a stream of events over time:**
 
-**Recommended approach with proper cleanup:**
+<div style="font-size: 0.85em;">
 
 ```typescript
-private destroyRef = inject(DestroyRef);
+// 1. Start with a stream (Observable)
+this.restService.call('/users/12345')
 
-this.eventsService.entities$.pipe(
-  takeUntilDestroyed(this.destroyRef),
-  tap(entities => this.entities = entities),
-  catchError(error => {
-    this.alert.error(error.message);
-    return EMPTY;
-  })
-).subscribe();
+  // 2. Transform data with operators (optional)
+  .pipe(
+    map(user => user.full_name),        // Extract just the name
+    catchError(error => of('Unknown'))  // Handle errors, of() creates Observable with fallback value
+  )
+
+  // 3. Subscribe to execute and get results
+  .subscribe(name => {
+    console.log(name);  // "John Doe"
+  });
 ```
 
-**Best practices shown:**
-- `takeUntilDestroyed()` - Auto-unsubscribe when component destroyed
-- `tap()` - Side effects (assignment) without changing the stream
-- Keep subscribe empty - logic stays in operators
-- `catchError()` - Handle errors gracefully
+**Key pattern:**
+- `pipe()` - Chain operators together
+- Operators - Transform, filter, handle errors
+- `subscribe()` - Actually execute the Observable
 
 </div>
 
@@ -271,17 +275,46 @@ Each service is injected via Angular Dependency Injection
 **Key Methods:**
 - `onPageLoad()` - Subscribe to page changes
 - `getInitData()` - Get logged in user info, institution, language
-- `entities$` - Observable of current entities
+- `entities$` - Observable of current records user is viewing (e.g., ITEM, USER, BIB_MDS)
 - `refreshPage()` / `home()` / `back()` - Navigation, but limited
 
-**Example:**
-```typescript
-eventsService.entities$.subscribe(entities => {
-  // React to current entities viewed by user (e.g., ITEM, USER)
-});
-```
 
 <!-- _footer: '📖 Events Service Docs: [developers.exlibrisgroup.com/cloudapps/docs/api/events-service](https://developers.exlibrisgroup.com/cloudapps/docs/api/events-service/)' -->
+
+---
+
+# Event Service
+
+## Good Practise: How to subscribe to entities$
+
+<div style="font-size: 0.75em;">
+
+**Recommended approach with proper cleanup:**
+
+```typescript
+export class MyComponent {
+  private eventsService = inject(CloudAppEventsService);
+  private alert = inject(CloudAppAlertService);
+  private destroyRef = inject(DestroyRef);
+
+  entities: Entity[] = []; // Entity type from SDK, holds current entities
+
+  // ngOnInit lifecycle hook (called on component initialization)
+  ngOnInit() {
+    this.eventsService.entities$.pipe(
+      takeUntilDestroyed(this.destroyRef), // Auto-cleanup on destroy
+      tap(entities => this.entities = entities), // Side effect: assign to local variable
+      catchError(error => {
+        this.alert.error(error.message); // Handle errors
+        return of([]);
+      })
+    ).subscribe(); // Keep subscribe empty - logic in operators
+  }
+}
+```
+
+</div>
+
 
 ---
 
@@ -320,12 +353,7 @@ eventsService.entities$.subscribe(entities => {
 **Purpose:** Display messages to users
 
 **Methods:**
-- `success()`, `info()` , `warning()`, `error()` - Show alerts
-
-<div style="display: flex; gap: 150px; align-items: flex-start; width: 100%;">
-
-<div style="flex: 1;">
-
+- `success()`, `info()` , `warning()`, `error()`
 **Example:**
 ```typescript
 alertService.success('Item updated!');
@@ -333,15 +361,7 @@ alertService.error('Error adding expansion: ' + error.message,
   { autoClose: false });
 ```
 
-</div>
-
-<div style="flex: 1;">
-
-![width:100%](screenshots/alert-error.png)
-
-</div>
-
-</div>
+![w:300px right-top](screenshots/alert-error.png)
 
 <!-- _footer: '📖 Alert Service: [developers.exlibrisgroup.com/cloudapps/docs/api/alert-service](https://developers.exlibrisgroup.com/cloudapps/docs/api/alert-service/)' -->
 
@@ -397,14 +417,14 @@ restService.call('/users/{user_id}').subscribe(
 **SLSP Use Case:** Need access to **Network Zone (NZ)** data
 - Examples: SLSP Card, SLSP CatExpand
 
-**Solution:** Use Cloud App **Proxy** for NZ API access
+**Solution:** Use of SLSP Cloud App **Proxy** for NZ API access
 
 **How it works:**
 - Proxy acts as external API endpoint
-- Configure in Cloud App manifest
-- User roles are still checked (permission-based)
-- Enables NZ data retrieval in multi-tenant environment
+- App sends requests to proxy, which forwards to NZ API
+- User roles are still checked by proxy
 
+<!-- _footer: '📖 SLSP Proxy Docs: [proxy02.swisscovery.network/docs](https://proxy02.swisscovery.network/docs)' -->
 ---
 
 # Using External APIs
@@ -420,13 +440,14 @@ restService.call('/users/{user_id}').subscribe(
 
 ---
 
-# External APIs: Technical Details
+# Using External APIs: What You Need
 
 **Requirements:**
-- Configure **CSP** (Content Security Policy) in manifest.json
-- Must comply with **CORS** restrictions
-- May need backend proxy for CORS-restricted APIs
+- APIs must support **CORS** (Cross-Origin Resource Sharing)
+  - May need backend proxy for CORS-restricted APIs
+- You'll explicitly configure allowed domains in your app's configuration, it's a security requirement
 
+**We'll see how to configure this in the manifest.json section**
 
 ---
 
@@ -472,7 +493,6 @@ this.translate.instant('main.actionMessage')
 
 **Key things you'll configure:**
 - **Basic metadata** - Title, subtitle, description, author
-- **Multi-language labels** - Translated app titles/descriptions
 - **Entity types** - Which Alma pages your app appears on (ITEM, USER, BIB_MDS, etc.)
 - **Security (CSP)** - External API connections, sandbox permissions
 - **Widget settings** - Dashboard widget configuration
@@ -494,7 +514,7 @@ this.translate.instant('main.actionMessage')
 
 **Process:**
 1. Build production version (`eca build`) and verify build is successful
-2. Upload code to GitHub and create a release
+2. Upload code to GitHub (public!) and create a release
 3. Submit app to Ex Libris App Center (Developer Network)
 4. Await review and approval
 5. ... for updates, create new GitHub releases
@@ -512,24 +532,12 @@ this.translate.instant('main.actionMessage')
 - Available alongside stable version
 - Users can opt-in to beta testing
 
-<div style="display: flex; gap: 15px; align-items: flex-start; width: 100%;">
-
-<div style="flex: 2;">
-
 **Benefits:**
 - Test new features before full release
 - Gather feedback from real usage
 - Safe rollback to stable version if issues arise
 
-</div>
-
-<div style="flex: 1; align-self: center;">
-
-![width:100%](screenshots/beta.png)
-
-</div>
-
-</div>
+![w:300px right-top](screenshots/beta.png)
 
 
 ---
@@ -558,8 +566,7 @@ this.translate.instant('main.actionMessage')
 
 **Transparency Requirements:**
 - Cloud Apps code must be open source (for public apps)
-- External API connections defined in `manifest.json`
-- Clear visibility into what resources apps access
+- External API connections defined in `manifest.json` and clearly visible in App Center
 
 
 ---
@@ -593,7 +600,7 @@ this.translate.instant('main.actionMessage')
 **Our Workshop Repository:**
 - This presentation
 - Development setup instructions
-- Sample app code
+- Template Cloud App project (starter code)
 
 ---
 
@@ -610,6 +617,8 @@ Let's build something together!
 
 **1. IDE Setup:**
 - Use your preferred IDE or **recommended: VS Code**
+
+![w:200px right-top](screenshots/qr-code.png)
 
 **2. Get the Workshop Repository:**
 

@@ -14,3 +14,8 @@ Uses [Marp](https://marp.app/) to convert Markdown to PDF:
 ```bash
 npx @marp-team/marp-cli slides.md -o slides.pdf
 ```
+
+To also export to PowerPoint (.pptx):
+```
+npx @marp-team/marp-cli slides.md -o slides.pptx
+```
