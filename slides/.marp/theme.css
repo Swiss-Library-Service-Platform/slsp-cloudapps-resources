@@ -3,7 +3,7 @@
 @import 'default';
 
 section {
-  font-size: 2em;
+  //font-size: 1.9em;
   font-family: 'Helvetica Neue', Arial, sans-serif;
   background-color: #ffffff;
   color: #333;
@@ -14,6 +14,7 @@ h1 {
   color: #4E4A99;
   border-bottom: 3px solid #4E4A99;
   padding-bottom: 10px;
+  font-size: 1.5em;
 }
 
 h2 {
@@ -38,7 +39,7 @@ code {
 }
 
 pre {
-  font-size: 0.9em;
+  font-size: 0.8em;
   background-color: #f4f4f4;
   padding: 15px;
   border-radius: 5px;

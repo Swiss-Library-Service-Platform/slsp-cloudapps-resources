@@ -5,8 +5,9 @@ paginate: true
 ---
 
 <!-- _class: lead -->
-# Alma Cloud Apps Workshop
-## SLSP Developer Forum 2025
+# Alma Cloud Apps
+## Fundamentals & Development
+###### SLSP Developer Forum 2025
 
 ---
 
@@ -36,15 +37,14 @@ paginate: true
 **Concept:**
 - Custom extensions for Ex Libris Alma platform
 - Run directly in a sidebar in Alma 
-- Extend functionality via **Alma REST API** and external APIs
+- Extend functionality via **Alma REST API**
+- Connect to systems via **External APIs**
 
 
 **Key Benefits:**
 - Integrated user experience
-- Workflow automations & efficiency improvements
-- Deploy via Cloud App Store (no separate hosting needed)
-- Can be shared across institutions
-
+- Can be shared across institutions via Cloud App Center
+- No separate hosting or authentication needed
 
 ---
 
@@ -103,7 +103,7 @@ paginate: true
 
 **What Cloud Apps CAN do:**
 - Access and manipulate data via Alma REST API
-- Custom workflows and automations
+- Workflow shortcuts and automations
 - Integration with external systems and APIs
 - NZ API access via Cloud App Proxy
 
@@ -216,7 +216,6 @@ Change Detection & Reactivity
 
 **Think of Observables like a stream of events over time:**
 
-<div style="font-size: 0.85em;">
 
 ```typescript
 // 1. Start with a stream (Observable)
@@ -234,12 +233,10 @@ this.restService.call('/users/12345')
   });
 ```
 
-**Key pattern:**
-- `pipe()` - Chain operators together
-- Operators - Transform, filter, handle errors
-- `subscribe()` - Actually execute the Observable
-
-</div>
+- **Key pattern:**
+  - `pipe()` - Chain operators together
+  - Operators - Transform, filter, handle errors
+  - `subscribe()` - Actually execute the Observable
 
 ---
 
@@ -276,7 +273,7 @@ Each service is injected via Angular Dependency Injection
 - `onPageLoad()` - Subscribe to page changes
 - `getInitData()` - Get logged in user info, institution, language
 - `entities$` - Observable of current records user is viewing (e.g., ITEM, USER, BIB_MDS)
-- `refreshPage()` / `home()` / `back()` - Navigation, but limited
+- `refreshPage()` / `home()` / `back()` - Navigation of Alma main UI, but limited!
 
 
 <!-- _footer: '📖 Events Service Docs: [developers.exlibrisgroup.com/cloudapps/docs/api/events-service](https://developers.exlibrisgroup.com/cloudapps/docs/api/events-service/)' -->
@@ -285,11 +282,9 @@ Each service is injected via Angular Dependency Injection
 
 # Event Service
 
-## Good Practise: How to subscribe to entities$
-
 <div style="font-size: 0.75em;">
 
-**Recommended approach with proper cleanup:**
+**$entities: Recommended approach with proper cleanup:**
 
 ```typescript
 export class MyComponent {
@@ -388,7 +383,6 @@ alertService.error('Error adding expansion: ' + error.message,
 
 **Purpose:** Data retrieval and manipulation via Alma API
 
-**Why it's the most important:**
 - Core functionality for most Cloud Apps
 - Direct access to Alma data (items, users, loans, etc.)
 - Enables CRUD operations on Alma resources
@@ -399,14 +393,8 @@ alertService.error('Error adding expansion: ' + error.message,
 - **IZ API access only** - Accesses Institution Zone data
 - **No governance impact** - Doesn't count toward limits
 
-**Example:**
-```typescript
-restService.call('/users/{user_id}').subscribe(
-  user => console.log(user)
-);
-```
 
-<!-- _footer: '📖 REST Service: [developers.exlibrisgroup.com/cloudapps/docs/api/rest-service](https://developers.exlibrisgroup.com/cloudapps/docs/api/rest-service/)<br>Alma API: [developers.exlibrisgroup.com/alma](https://developers.exlibrisgroup.com/alma)' -->
+<!-- _footer: '📖 REST Service: [developers.exlibrisgroup.com/cloudapps/docs/api/rest-service](https://developers.exlibrisgroup.com/cloudapps/docs/api/rest-service/)<br>📖 Alma API: [developers.exlibrisgroup.com/alma](https://developers.exlibrisgroup.com/alma)' -->
 
 ---
 
@@ -461,7 +449,6 @@ restService.call('/users/{user_id}').subscribe(
 - Apps automatically use user's Alma language
 - Translation files in `cloudapp/src/i18n/` (`en.json`, `de.json`, etc.)
 
-<div style="font-size: 0.7em;">
 
 **In templates (HTML):**
 ```html
@@ -479,7 +466,6 @@ this.translate.instant('main.actionMessage')
 // de.json: "actionButtonLabel": "Primär-Aktion"
 ```
 
-</div>
 
 <!-- _footer: '📖 [developers.exlibrisgroup.com/cloudapps/tutorials/translate](https://developers.exlibrisgroup.com/cloudapps/tutorials/translate/)' -->
 
@@ -497,8 +483,6 @@ this.translate.instant('main.actionMessage')
 - **Security (CSP)** - External API connections, sandbox permissions
 - **Widget settings** - Dashboard widget configuration
 - **Institution restrictions** - Control which institutions can install (`relevantForInst`)
-
-**Note:** Changes require restart: `eca start`
 
 <!-- _footer: '📖 Manifest Docs: [developers.exlibrisgroup.com/cloudapps/docs/manifest](https://developers.exlibrisgroup.com/cloudapps/docs/manifest/)' -->
 
@@ -605,7 +589,7 @@ this.translate.instant('main.actionMessage')
 ---
 
 <!-- _class: lead -->
-# Hands-on Time!
+# Hands-on Time
 
 Let's build something together! 
 <br><br>
